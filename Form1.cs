@@ -74,10 +74,34 @@ namespace OfflineTube
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (textBox1.Text != "")
+            {
+                button2.PerformClick();
+                return;
+            }
             if (File.Exists(Environment.SpecialFolder.ApplicationData.ToString() + "\\road.txt"))
             {
                 textBox1.Text = File.ReadAllText(Environment.SpecialFolder.ApplicationData.ToString() + "\\road.txt");
                 button2.PerformClick();
+            }
+        }
+
+        private void textBox1_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Link;
+        }
+
+        private void textBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            DataObject data = (DataObject)e.Data;
+            if (data.ContainsFileDropList())
+            {
+                string[] rawFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if ((rawFiles != null) && (rawFiles.Length == 1))
+                {
+                    textBox1.Text = rawFiles[0];
+                    button2.PerformClick();
+                }
             }
         }
     }

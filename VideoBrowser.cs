@@ -8,15 +8,20 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Threading;
 
 namespace OfflineTube
 {
     public partial class VideoBrowser : Form
     {
+        bool threadrunning = false;
         internal string repository = "";
         public string Keywords = "";
         private bool closethis = true;
         private string excludedtitle = "";
+        List<string> videos = new List<string>();
+        List<string> frontvideos = new List<string>();
+        string reponame = "Repository";
         public VideoBrowser()
         {
             InitializeComponent();
@@ -24,21 +29,39 @@ namespace OfflineTube
 
         private void VideoBrowser_Load(object sender, EventArgs e)
         {
+            RePopulate();
+        }
+
+        void RePopulate()
+        {
+            threadrunning = true;
+            populationTimer.Enabled = true;
+            ThreadStart ts = new ThreadStart(populate);
+            Thread t = new Thread(ts);
+            t.Start();
+        }
+
+        void populate()
+        {
+            videos.Clear();
+            frontvideos.Clear();
             string[] moreconfusion = repository.Split('\\');
-            label3.Text = moreconfusion[moreconfusion.Length - 1];
+            reponame = moreconfusion[moreconfusion.Length - 1];
             foreach (string fi in Directory.GetFiles(repository))
             {
                 if (fi.Replace(repository + "\\", "").EndsWith(".mp4"))
                 {
-                    listBox1.Items.Add(fi.Replace(repository + "\\", "").Replace(".mp4", ""));
+                    videos.Add(fi.Replace(repository + "\\", "").Replace(".mp4", ""));
                 }
             }
-            listBox2.Items.AddRange(listBox1.Items);
-            for (int i = 0; i < listBox2.Items.Count; i++)
+            frontvideos.AddRange(videos);
+            for (int i = 0; i < frontvideos.Count; i++)
             {
-                int aa = listBox2.Items[i].ToString().Split('(').Count() - 1;
-                listBox2.Items[i] = listBox2.Items[i].ToString().Replace("(" + listBox2.Items[i].ToString().Split('(')[aa], "");
+                int aa = frontvideos[i].ToString().Split('(').Count() - 1;
+                frontvideos[i] = frontvideos[i].ToString().Replace("(" + frontvideos[i].ToString().Split('(')[aa], "");
             }
+            threadrunning = false;
+            Thread.CurrentThread.Abort();
         }
 
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -192,20 +215,8 @@ namespace OfflineTube
         private void Button7_Click(object sender, EventArgs e)
         {
             if (button7.Enabled == true) { listBox1.Items.Clear(); }
-            foreach (string fi in Directory.GetFiles(repository))
-            {
-                if (fi.Replace(repository + "\\", "").EndsWith(".mp4"))
-                {
-                    listBox1.Items.Add(fi.Replace(repository + "\\", "").Replace(".mp4", ""));
-                }
-            }
             listBox2.Items.Clear();
-            listBox2.Items.AddRange(listBox1.Items);
-            for (int i = 0; i < listBox2.Items.Count; i++)
-            {
-                int aa = listBox2.Items[i].ToString().Split('(').Count() - 1;
-                listBox2.Items[i] = listBox2.Items[i].ToString().Replace("(" + listBox2.Items[i].ToString().Split('(')[aa], "");
-            }
+            RePopulate();
             textBox1.Text = "";
             button7.Enabled = false;
         }
@@ -500,6 +511,17 @@ namespace OfflineTube
             } else
             {
                 this.FormBorderStyle = FormBorderStyle.Sizable;
+            }
+        }
+
+        private void populationTimer_Tick(object sender, EventArgs e)
+        {
+            if (!threadrunning)
+            {
+                listBox1.Items.AddRange(videos.ToArray());
+                listBox2.Items.AddRange(frontvideos.ToArray());
+                label3.Text = reponame;
+                populationTimer.Enabled = false;
             }
         }
     }

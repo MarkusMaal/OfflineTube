@@ -53,6 +53,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.listBox2 = new System.Windows.Forms.ListBox();
+            this.populationTimer = new System.Windows.Forms.Timer(this.components);
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -85,9 +86,9 @@
             this.label3.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.label3.Location = new System.Drawing.Point(13, 74);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 21);
+            this.label3.Size = new System.Drawing.Size(392, 21);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Repository";
+            this.label3.Text = "Please wait, while the list of videos is being populated....";
             // 
             // listBox1
             // 
@@ -374,6 +375,11 @@
             this.listBox2.SelectedIndexChanged += new System.EventHandler(this.ListBox2_SelectedIndexChanged);
             this.listBox2.DoubleClick += new System.EventHandler(this.ListBox2_DoubleClick);
             // 
+            // populationTimer
+            // 
+            this.populationTimer.Interval = 200;
+            this.populationTimer.Tick += new System.EventHandler(this.populationTimer_Tick);
+            // 
             // VideoBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -436,5 +442,6 @@
         public System.Windows.Forms.PictureBox pictureBox1;
         public System.Windows.Forms.ListBox listBox1;
         public System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Timer populationTimer;
     }
 }

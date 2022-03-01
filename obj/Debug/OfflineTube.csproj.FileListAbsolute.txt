@@ -1,0 +1,17 @@
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\bin\Debug\OfflineTube.exe
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\bin\Debug\OfflineTube.pdb
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\bin\Debug\Interop.WMPLib.dll
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.csproj.AssemblyReference.cache
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\Interop.WMPLib.dll
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\AxInterop.WMPLib.dll
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.csproj.ResolveComReference.cache
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.DescView.resources
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.Form1.resources
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.Properties.Resources.resources
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.VideoBrowser.resources
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.VideoPage.resources
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.csproj.GenerateResource.cache
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.csproj.CoreCompileInputs.cache
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.exe
+C:\Users\marku\Source\Repos\MarkusMaal\OfflineTube\obj\Debug\OfflineTube.pdb
