@@ -127,7 +127,7 @@ namespace OfflineTube
                     if (timer2.Interval != 100) { timer2.Interval = 100; }
                 } else
                 {
-                    label3.Text = "From: " + moreconfusion[moreconfusion.Length - 1];
+                    label3.Text = "Repository: " + moreconfusion[moreconfusion.Length - 1];
                 }
                 if (!timer2.Enabled)
                 {
@@ -159,9 +159,9 @@ namespace OfflineTube
                             { 
                                 recommendation += textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower() + " ";
                             }
-                            System.Threading.Thread.Sleep(5);
+                            //System.Threading.Thread.Sleep(5);
                         }
-                        System.Threading.Thread.Sleep(5);
+                        //System.Threading.Thread.Sleep(5);
                     }
                     suglength = label2.Text.Replace(Environment.NewLine, " ").Split(' ').Count();
                     for (int i = 0; i < 3; i++)
@@ -171,10 +171,10 @@ namespace OfflineTube
                             if (label2.Text.Split(' ')[new Random().Next(0, suglength - 1)].ToLower().Length > 4)
                             {
                                 recommendation += label2.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower() + " ";
-                                System.Threading.Thread.Sleep(5);
+                                //System.Threading.Thread.Sleep(5);
                             }
                         }
-                        System.Threading.Thread.Sleep(5);
+                        //System.Threading.Thread.Sleep(5);
                     }
                 }
                 textBox1.Text += Environment.NewLine + Environment.NewLine + "Keywords (added by OfflineTube): " + Environment.NewLine;
@@ -236,6 +236,8 @@ namespace OfflineTube
                     }
                     catch
                     {
+                        pictureBox3.Image.Dispose();
+                        pictureBox3.Image = null;
                         label8.Text = "(you have reached the end)";
                     }
                 }
