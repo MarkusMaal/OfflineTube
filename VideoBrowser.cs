@@ -19,8 +19,10 @@ namespace OfflineTube
         public string Keywords = "";
         private bool closethis = true;
         private string excludedtitle = "";
+        private string repo_root = "";
         List<string> videos = new List<string>();
         List<string> frontvideos = new List<string>();
+        List<string> subrepos = new List<string>();
         string reponame = "Repository";
         public VideoBrowser()
         {
@@ -29,6 +31,7 @@ namespace OfflineTube
 
         private void VideoBrowser_Load(object sender, EventArgs e)
         {
+            repo_root = repository;
             RePopulate();
         }
 
@@ -45,6 +48,7 @@ namespace OfflineTube
         {
             videos.Clear();
             frontvideos.Clear();
+            subrepos.Clear();
             string[] moreconfusion = repository.Split('\\');
             reponame = moreconfusion[moreconfusion.Length - 1];
             foreach (string fi in Directory.GetFiles(repository))
@@ -53,6 +57,10 @@ namespace OfflineTube
                 {
                     videos.Add(fi.Replace(repository + "\\", "").Replace(".mp4", ""));
                 }
+            }
+            foreach (DirectoryInfo di in new DirectoryInfo(repo_root).GetDirectories())
+            {
+                subrepos.Add(di.Name);
             }
             frontvideos.AddRange(videos);
             for (int i = 0; i < frontvideos.Count; i++)
@@ -177,7 +185,7 @@ namespace OfflineTube
                     listBox1.Items.AddRange(Program.vb.listBox1.Items);
                     listBox2.Items.Clear();
                     listBox2.Items.AddRange(Program.vb.listBox1.Items);
-                    listBox2.SelectedIndex = vp.vScrollBar1.Value;
+                    listBox2.SelectedIndex = Program.playrec;
                     button1.PerformClick();
                 }
                 button7.PerformClick();
@@ -520,8 +528,21 @@ namespace OfflineTube
             {
                 listBox1.Items.AddRange(videos.ToArray());
                 listBox2.Items.AddRange(frontvideos.ToArray());
+                listBox3.Items.AddRange(subrepos.ToArray());
                 label3.Text = reponame;
                 populationTimer.Enabled = false;
+            }
+        }
+
+        private void listBox3_DoubleClick(object sender, EventArgs e)
+        {
+            if (listBox3.SelectedIndices.Count > 0)
+            {
+                repository = repo_root + "\\" + listBox3.Items[listBox3.SelectedIndex];
+                RePopulate();
+                listBox1.Items.Clear();
+                listBox2.Items.Clear();
+                listBox3.Items.Clear();
             }
         }
     }

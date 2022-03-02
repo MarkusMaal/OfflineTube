@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace OfflineTube
@@ -17,6 +18,9 @@ namespace OfflineTube
         internal string simplename = "";
         internal string fullname = "";
         internal string recommendation = "";
+        internal int selection = 0;
+        private string description = "";
+        private string title = "";
         private string[] recommended_videos = { };
         private int ticks = 0;
         private bool initialtest = true;
@@ -82,6 +86,8 @@ namespace OfflineTube
             //label3.Text = "Created by: " + axWindowsMediaPlayer1.currentMedia.getItemInfo("Artist") + " (from " + moreconfusion[moreconfusion.Length - 1] + ")";
             axWindowsMediaPlayer1.Ctlcontrols.play();
             axWindowsMediaPlayer1.settings.volume = 0;
+            description = textBox1.Text;
+            title = label2.Text;
             timer2.Enabled = true;
         }
 
@@ -104,34 +110,79 @@ namespace OfflineTube
             }
         }
 
+        void CollectTags()
+        {
+            for (int x = 0; x < 15; x++)
+            {
+                int suglength = description.Replace(Environment.NewLine, " ").Split(' ').Count();
+                for (int i = 0; i < 10; i++)
+                {
+                    if (!((description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("http://") || (description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("\"")) || (description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("_") || (description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("#") || (description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("https://")) || (description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains(":")))) || (recommendation.Contains(description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower())))))
+                    {
+                        if (description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower().Length > 4)
+                        {
+                            recommendation += description.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower() + " ";
+                        }
+                        Thread.Sleep(5);
+                    }
+                    Thread.Sleep(5);
+                }
+                suglength = title.Replace(Environment.NewLine, " ").Split(' ').Count();
+                for (int i = 0; i < 3; i++)
+                {
+                    if (!recommendation.Contains(title.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower()))
+                    {
+                        if (title.Split(' ')[new Random().Next(0, suglength - 1)].ToLower().Length > 4)
+                        {
+                            recommendation += title.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower() + " ";
+                            Thread.Sleep(5);
+                        }
+                    }
+                    Thread.Sleep(5);
+                }
+            }
+            description += Environment.NewLine + Environment.NewLine + "Keywords (added by OfflineTube): " + Environment.NewLine;
+            foreach (string element in recommendation.Split(' '))
+            {
+                description += element + ", ";
+            }
+            Program.vb.Keywords = this.recommendation;
+            Program.vb.button9.PerformClick();
+            this.recommended_videos = Program.vb.listBox2.Items.OfType<string>().ToArray();
+            Thread.CurrentThread.Abort();
+        }
+
         private void Timer1_Tick(object sender, EventArgs e)
         {
             if (axWindowsMediaPlayer1.playState == WMPLib.WMPPlayState.wmppsPlaying)
             {
                 trackBar1.Maximum = Convert.ToInt32(axWindowsMediaPlayer1.currentMedia.duration);
                 try
-                { 
+                {
                     trackBar1.Value = Convert.ToInt32(axWindowsMediaPlayer1.Ctlcontrols.currentPosition);
-                } catch { }
+                }
+                catch { }
                 if (axWindowsMediaPlayer1.currentMedia.getItemInfo("Title") != "")
                 {
                     label2.Text = axWindowsMediaPlayer1.currentMedia.getItemInfo("Title");
-                } else
+                }
+                else
                 {
                     label2.Text = simplename;
                 }
                 string[] moreconfusion = repository.Split('\\');
                 if (axWindowsMediaPlayer1.currentMedia.getItemInfo("Artist") != "")
-                { 
+                {
                     label3.Text = "Created by: " + axWindowsMediaPlayer1.currentMedia.getItemInfo("Artist");
                     if (timer2.Interval != 100) { timer2.Interval = 100; }
-                } else
+                }
+                else
                 {
                     label3.Text = "Repository: " + moreconfusion[moreconfusion.Length - 1];
                 }
                 if (!timer2.Enabled)
                 {
-                    double percentage = Math.Round( (Convert.ToDouble(trackBar1.Value) / Convert.ToDouble(trackBar1.Maximum)) * 100.0, 2);
+                    double percentage = Math.Round((Convert.ToDouble(trackBar1.Value) / Convert.ToDouble(trackBar1.Maximum)) * 100.0, 2);
                     label5.Text = axWindowsMediaPlayer1.Ctlcontrols.currentPositionString + "/" + axWindowsMediaPlayer1.currentMedia.durationString + " (" + percentage.ToString() + "%)";
                 }
             }
@@ -149,101 +200,14 @@ namespace OfflineTube
                 trackBar1.Visible = false;
                 timer1.Enabled = false;
                 button4.Enabled = true;
-                for (int x = 0; x < 15; x++)
-                { 
-                    int suglength = textBox1.Text.Replace(Environment.NewLine, " ").Split(' ').Count();
-                    for (int i = 0; i < 10; i++)
-                    {
-                        if (!((textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("http://") || (textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("\"")) || (textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("_") || (textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("#") || (textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains("https://")) || (textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].Contains(":")))) || (recommendation.Contains(textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower()))))) {
-                            if (textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower().Length > 4)
-                            { 
-                                recommendation += textBox1.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower() + " ";
-                            }
-                            //System.Threading.Thread.Sleep(5);
-                        }
-                        //System.Threading.Thread.Sleep(5);
-                    }
-                    suglength = label2.Text.Replace(Environment.NewLine, " ").Split(' ').Count();
-                    for (int i = 0; i < 3; i++)
-                    {
-                        if (!recommendation.Contains(label2.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower()))
-                        {
-                            if (label2.Text.Split(' ')[new Random().Next(0, suglength - 1)].ToLower().Length > 4)
-                            {
-                                recommendation += label2.Text.Replace(Environment.NewLine, " ").Split(' ')[new Random().Next(0, suglength - 1)].ToLower() + " ";
-                                //System.Threading.Thread.Sleep(5);
-                            }
-                        }
-                        //System.Threading.Thread.Sleep(5);
-                    }
-                }
-                textBox1.Text += Environment.NewLine + Environment.NewLine + "Keywords (added by OfflineTube): " + Environment.NewLine;
-                foreach (string element in recommendation.Split(' '))
-                {
-                    textBox1.Text += element + ", ";
-                }
-                Program.vb.Keywords = this.recommendation;
-                Program.vb.button9.PerformClick();
-                this.recommended_videos = Program.vb.listBox2.Items.OfType<string>().ToArray();
-                if (recommended_videos.Length > 0)
-                { 
-                    vScrollBar1.Maximum = recommended_videos.Length - 1;
 
-                    Program.vb.listBox2.SelectedIndex = vScrollBar1.Value;
-                    string rawname = "";
-                    string[] moreconfusion = Program.vb.listBox1.Items[vScrollBar1.Value].ToString().Split('(');
-                    for (int i = 0; i < moreconfusion.Length - 1; i++)
-                    {
-                        rawname += moreconfusion[i] + "(";
-                    }
-                    rawname = rawname.Substring(0, rawname.Length - 2);
-                    if (File.Exists(repository + "\\" + rawname + " (BQ).jpg"))
-                    {
-                        pictureBox2.Image = Image.FromFile(repository + "\\" + rawname + " (BQ).jpg");
-                    }
-                    else if (File.Exists(repository + "\\" + rawname + " (HQ).jpg"))
-                    {
-                        pictureBox2.Image = Image.FromFile(repository + "\\" + rawname + " (HQ).jpg");
-                    }
-                    else
-                    {
-                        pictureBox2.Image = null;
-                    }
-                    label7.Text = recommended_videos[vScrollBar1.Value].Replace("* ", "").Replace("** ", "").Replace("*** ", "");
-                    try
-                    {
-                        Program.vb.listBox2.SelectedIndex = vScrollBar1.Value + 1;
-                        rawname = "";
-                        moreconfusion = Program.vb.listBox1.Items[vScrollBar1.Value + 1].ToString().Split('(');
-                        for (int i = 0; i < moreconfusion.Length - 1; i++)
-                        {
-                            rawname += moreconfusion[i] + "(";
-                        }
-                        rawname = rawname.Substring(0, rawname.Length - 2);
-                        if (File.Exists(repository + "\\" + rawname + " (BQ).jpg"))
-                        {
-                            pictureBox3.Image = Image.FromFile(repository + "\\" + rawname + " (BQ).jpg");
-                        }
-                        else if (File.Exists(repository + "\\" + rawname + " (HQ).jpg"))
-                        {
-                            pictureBox3.Image = Image.FromFile(repository + "\\" + rawname + " (HQ).jpg");
-                        }
-                        else
-                        {
-                            pictureBox3.Image = null;
-                        }
-                        label8.Text = recommended_videos[vScrollBar1.Value + 1].Replace("* ", "").Replace("** ", "").Replace("*** ", "");
-                    }
-                    catch
-                    {
-                        pictureBox3.Image.Dispose();
-                        pictureBox3.Image = null;
-                        label8.Text = "(you have reached the end)";
-                    }
-                }
-                label5.Text = "Click on the thumbnail to play the video";
+                ThreadStart ts = new ThreadStart(CollectTags);
+                Thread t = new Thread(ts);
+                t.Start();
             }
-        }
+
+
+    }
 
         private void TrackBar1_MouseUp(object sender, MouseEventArgs e)
         {
@@ -372,7 +336,6 @@ namespace OfflineTube
 
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            Program.vb.listBox2.SelectedIndex = vScrollBar1.Value;
             string rawname = "";
             string[] moreconfusion = Program.vb.listBox1.Items[vScrollBar1.Value].ToString().Split('(');
             for (int i = 0; i < moreconfusion.Length - 1; i++)
@@ -419,6 +382,7 @@ namespace OfflineTube
             }
             catch
             {
+                pictureBox3.Image = null;
                 label8.Text = "(you have reached the end)";
             }
         }
@@ -435,12 +399,23 @@ namespace OfflineTube
         {
             try
             {
-                Program.vb.listBox2.SelectedIndex = vScrollBar1.Value + 1;
+                int i = 0;
+                foreach (string s in Program.vb.listBox2.Items)
+                {
+                    if (s.Contains(label8.Text))
+                    {
+                        break;
+                    }
+                    i++;
+                }
+                Program.vb.listBox2.SelectedIndex = i;
+                Program.playrec = i;
                 Program.playthis = true;
-                Program.playrec = vScrollBar1.Value + 1;
                 this.Close();
             }
-            catch { }
+            catch {
+            
+            }
         }
 
         private void ConstTime_Tick(object sender, EventArgs e)
@@ -458,6 +433,76 @@ namespace OfflineTube
             else
             {
                 label9.Text = stimeMin + " " + stimeSec;
+            }
+        }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+
+            if (description != textBox1.Text)
+            {
+                textBox1.Text = description;
+                vScrollBar1.Maximum = recommended_videos.Length - 1;
+
+                Program.vb.listBox2.SelectedIndex = vScrollBar1.Value;
+                string rawname = "";
+                string[] moreconfusion = Program.vb.listBox1.Items[vScrollBar1.Value].ToString().Split('(');
+                for (int i = 0; i < moreconfusion.Length - 1; i++)
+                {
+                    rawname += moreconfusion[i] + "(";
+                }
+                rawname = rawname.Substring(0, rawname.Length - 2);
+                if (File.Exists(repository + "\\" + rawname + " (BQ).jpg"))
+                {
+                    pictureBox2.Image = Image.FromFile(repository + "\\" + rawname + " (BQ).jpg");
+                }
+                else if (File.Exists(repository + "\\" + rawname + " (HQ).jpg"))
+                {
+                    pictureBox2.Image = Image.FromFile(repository + "\\" + rawname + " (HQ).jpg");
+                }
+                else
+                {
+                    pictureBox2.Image = null;
+                }
+                label7.Text = recommended_videos[vScrollBar1.Value].Replace("* ", "").Replace("** ", "").Replace("*** ", "");
+                try
+                {
+                    Program.vb.listBox2.SelectedIndex = vScrollBar1.Value + 1;
+                    rawname = "";
+                    moreconfusion = Program.vb.listBox1.Items[vScrollBar1.Value + 1].ToString().Split('(');
+                    for (int i = 0; i < moreconfusion.Length - 1; i++)
+                    {
+                        rawname += moreconfusion[i] + "(";
+                    }
+                    rawname = rawname.Substring(0, rawname.Length - 2);
+                    if (File.Exists(repository + "\\" + rawname + " (BQ).jpg"))
+                    {
+                        pictureBox3.Image = Image.FromFile(repository + "\\" + rawname + " (BQ).jpg");
+                    }
+                    else if (File.Exists(repository + "\\" + rawname + " (HQ).jpg"))
+                    {
+                        pictureBox3.Image = Image.FromFile(repository + "\\" + rawname + " (HQ).jpg");
+                    }
+                    else
+                    {
+                        pictureBox3.Image = null;
+                    }
+                    label8.Text = recommended_videos[vScrollBar1.Value + 1].Replace("* ", "").Replace("** ", "").Replace("*** ", "");
+                }
+                catch
+                {
+                    pictureBox3.Image.Dispose();
+                    pictureBox3.Image = null;
+                    label8.Text = "(you have reached the end)";
+                }
+                label5.Text = "Click on the thumbnail to play the video";
+                progressBar1.Visible = false;
+                vScrollBar1.Visible = true;
+                label7.Visible = true;
+                label8.Visible = true;
+                pictureBox2.Visible = true;
+                pictureBox3.Visible = true;
+                timer3.Enabled = false;
             }
         }
     }

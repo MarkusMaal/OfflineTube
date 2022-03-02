@@ -54,6 +54,8 @@
             this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.label9 = new System.Windows.Forms.Label();
             this.ConstTime = new System.Windows.Forms.Timer(this.components);
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.timer3 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -114,7 +116,7 @@
             this.trackBar1.LargeChange = 3;
             this.trackBar1.Location = new System.Drawing.Point(-2, 443);
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(703, 48);
+            this.trackBar1.Size = new System.Drawing.Size(703, 45);
             this.trackBar1.TabIndex = 15;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar1.Visible = false;
@@ -130,7 +132,7 @@
             // 
             // timer2
             // 
-            this.timer2.Interval = 4000;
+            this.timer2.Interval = 1000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
             // label1
@@ -281,6 +283,7 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 22;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.Visible = false;
             this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // label7
@@ -292,6 +295,7 @@
             this.label7.Size = new System.Drawing.Size(226, 68);
             this.label7.TabIndex = 23;
             this.label7.Text = "(no suggestions)";
+            this.label7.Visible = false;
             // 
             // label8
             // 
@@ -302,6 +306,7 @@
             this.label8.Size = new System.Drawing.Size(226, 68);
             this.label8.TabIndex = 25;
             this.label8.Text = "(no suggestions)";
+            this.label8.Visible = false;
             // 
             // pictureBox3
             // 
@@ -315,6 +320,7 @@
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 24;
             this.pictureBox3.TabStop = false;
+            this.pictureBox3.Visible = false;
             this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // vScrollBar1
@@ -329,6 +335,7 @@
             this.vScrollBar1.Size = new System.Drawing.Size(18, 584);
             this.vScrollBar1.TabIndex = 26;
             this.vScrollBar1.Value = 1;
+            this.vScrollBar1.Visible = false;
             this.vScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
             // 
             // label9
@@ -349,12 +356,27 @@
             this.ConstTime.Interval = 1000;
             this.ConstTime.Tick += new System.EventHandler(this.ConstTime_Tick);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(711, 63);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(241, 11);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar1.TabIndex = 28;
+            // 
+            // timer3
+            // 
+            this.timer3.Enabled = true;
+            this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
+            // 
             // VideoPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(964, 659);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.label8);
@@ -419,5 +441,7 @@
         internal System.Windows.Forms.VScrollBar vScrollBar1;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Timer ConstTime;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Timer timer3;
     }
 }
