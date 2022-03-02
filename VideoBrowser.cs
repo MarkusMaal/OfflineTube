@@ -58,6 +58,7 @@ namespace OfflineTube
                     videos.Add(fi.Replace(repository + "\\", "").Replace(".mp4", ""));
                 }
             }
+            subrepos.Add(".");
             foreach (DirectoryInfo di in new DirectoryInfo(repo_root).GetDirectories())
             {
                 subrepos.Add(di.Name);
@@ -78,7 +79,16 @@ namespace OfflineTube
             {
                 button7.Enabled = true;
                 string rawname = "";
-                string[] moreconfusion = listBox1.SelectedItem.ToString().Split('(');
+                string[] moreconfusion;
+                if (listBox1.SelectedItem.ToString().Contains("("))
+                {
+                    moreconfusion = listBox1.SelectedItem.ToString().Split('(');
+                    button3.Enabled = true;
+                } else
+                {
+                    button3.Enabled = false;
+                    return;
+                }
                 for (int i = 0; i < moreconfusion.Length - 1; i++)
                 {
                     rawname += moreconfusion[i] + "(";
@@ -158,12 +168,18 @@ namespace OfflineTube
             if (listBox1.SelectedItems.Count > 0)
             { 
                 string rawname = "";
-                string[] moreconfusion = listBox1.SelectedItem.ToString().Split('(');
-                for (int i = 0; i < moreconfusion.Length - 1; i++)
+                if (listBox1.SelectedItem.ToString().Contains("("))
                 {
-                    rawname += moreconfusion[i] + "(";
+                    string[] moreconfusion = listBox1.SelectedItem.ToString().Split('(');
+                    for (int i = 0; i < moreconfusion.Length - 1; i++)
+                    {
+                        rawname += moreconfusion[i] + "(";
+                    }
+                    rawname = rawname.Substring(0, rawname.Length - 2);
+                } else
+                {
+                    rawname = listBox1.SelectedItem.ToString();
                 }
-                rawname = rawname.Substring(0, rawname.Length - 2);
                 VideoPage vp = new VideoPage();
                 excludedtitle = listBox1.SelectedItem.ToString();
                 vp.repository = repository;
@@ -224,6 +240,7 @@ namespace OfflineTube
         {
             if (button7.Enabled == true) { listBox1.Items.Clear(); }
             listBox2.Items.Clear();
+            listBox3.Items.Clear();
             RePopulate();
             textBox1.Text = "";
             button7.Enabled = false;
@@ -316,24 +333,22 @@ namespace OfflineTube
         {
 
             string rawname = "";
-            string[] moreconfusion = listBox1.SelectedItem.ToString().Split('(');
-            for (int i = 0; i < moreconfusion.Length - 1; i++)
+            if ((listBox1.SelectedIndices.Count > 0) && (listBox1.SelectedItem.ToString().Contains("(")))
             {
-                rawname += moreconfusion[i] + "(";
+                string[] moreconfusion = listBox1.SelectedItem.ToString().Split('(');
+                for (int i = 0; i < moreconfusion.Length - 1; i++)
+                {
+                    rawname += moreconfusion[i] + "(";
+                }
+                rawname = rawname.Substring(0, rawname.Length - 2);
+                if (File.Exists(repository + "\\" + rawname + " (Description).txt"))
+                {
+                    DescView dv = new DescView();
+                    dv.text = File.ReadAllText(repository + "\\" + rawname + " (Description).txt");
+                    dv.Text = listBox2.SelectedItem.ToString();
+                    dv.ShowDialog();
+                }
             }
-            rawname = rawname.Substring(0, rawname.Length - 2);
-            if (File.Exists(repository + "\\" + rawname + " (Description).txt"))
-            {
-                DescView dv = new DescView();
-                dv.text = File.ReadAllText(repository + "\\" + rawname + " (Description).txt");
-                dv.Text = listBox2.SelectedItem.ToString();
-                dv.ShowDialog();
-            }
-        }
-
-        private void Label7_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void ListBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -366,12 +381,19 @@ namespace OfflineTube
             {
                 string rawname = "";
                 string teststring = "";
-                string[] moreconfusion = listBox1.Items[i].ToString().Split('(');
-                for (int x = 0; x < moreconfusion.Length - 1; x++)
+                string[] moreconfusion;
+                if (listBox1.Items[i].ToString().Contains("("))
                 {
-                    rawname += moreconfusion[x] + "(";
+                    moreconfusion = listBox1.Items[i].ToString().Split('(');
+                    for (int x = 0; x < moreconfusion.Length - 1; x++)
+                    {
+                        rawname += moreconfusion[x] + "(";
+                    }
+                    rawname = rawname.Substring(0, rawname.Length - 2);
+                } else
+                {
+                    rawname = listBox1.Items[i].ToString();
                 }
-                rawname = rawname.Substring(0, rawname.Length - 2);
                 if (File.Exists(repository + "\\" + rawname + " (Description).txt"))
                 {
                     teststring = File.ReadAllText(repository + "\\" + rawname + " (Description).txt").ToUpper();
@@ -539,6 +561,10 @@ namespace OfflineTube
             if (listBox3.SelectedIndices.Count > 0)
             {
                 repository = repo_root + "\\" + listBox3.Items[listBox3.SelectedIndex];
+                if (listBox3.Items[listBox3.SelectedIndex].ToString() == ".")
+                {
+                    repository = repo_root;
+                }
                 RePopulate();
                 listBox1.Items.Clear();
                 listBox2.Items.Clear();

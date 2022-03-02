@@ -143,7 +143,6 @@
             this.label7.Size = new System.Drawing.Size(220, 154);
             this.label7.TabIndex = 9;
             this.label7.Text = "(this video has no description)";
-            this.label7.Click += new System.EventHandler(this.Label7_Click);
             this.label7.DoubleClick += new System.EventHandler(this.Label7_DoubleClick);
             // 
             // button5

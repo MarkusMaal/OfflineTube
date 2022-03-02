@@ -446,12 +446,21 @@ namespace OfflineTube
 
                 Program.vb.listBox2.SelectedIndex = vScrollBar1.Value;
                 string rawname = "";
-                string[] moreconfusion = Program.vb.listBox1.Items[vScrollBar1.Value].ToString().Split('(');
-                for (int i = 0; i < moreconfusion.Length - 1; i++)
+                string[] moreconfusion;
+                if (Program.vb.listBox1.Items[vScrollBar1.Value].ToString().Contains("("))
                 {
-                    rawname += moreconfusion[i] + "(";
+                    moreconfusion = Program.vb.listBox1.Items[vScrollBar1.Value].ToString().Split('(');
+                    for (int i = 0; i < moreconfusion.Length - 1; i++)
+                    {
+                        rawname += moreconfusion[i] + "(";
+                    }
+                    rawname = rawname.Substring(0, rawname.Length - 2);
+                } else
+                {
+                    timer3.Enabled = false;
+                    progressBar1.Visible = false;
+                    return;
                 }
-                rawname = rawname.Substring(0, rawname.Length - 2);
                 if (File.Exists(repository + "\\" + rawname + " (BQ).jpg"))
                 {
                     pictureBox2.Image = Image.FromFile(repository + "\\" + rawname + " (BQ).jpg");
