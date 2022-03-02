@@ -545,5 +545,10 @@ namespace OfflineTube
                 listBox3.Items.Clear();
             }
         }
+
+        private void pictureBox1_DoubleClick(object sender, EventArgs e)
+        {
+            button3.PerformClick();
+        }
     }
 }
